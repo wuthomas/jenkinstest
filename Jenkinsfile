@@ -10,22 +10,22 @@ node {
   sh 'printenv'
 
   stage 'Test' {
-    parallel T1: {
-            node('T1') {
+    parallel linux: {
+            node('linux') {
 	        echo "checkout T1 project"
 	        checkout scm
 	        sleep 5
 	        echo "Test T1 job done"
         },
-            T2: {
-            node('T2') {
+            windows: {
+            node('windows') {
 	        echo "Checkout T2 project"
 	        checkout scm
 	        sleep 15
 	        echo "Test T2 job done"
         },
-	T3: {
-            node('T3') {
+	    other: {
+            node('other') {
 	        echo "checkout T3 project"
 	        checkout scm
 	        sleep 10
