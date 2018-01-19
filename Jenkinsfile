@@ -39,7 +39,8 @@ node {
     stage 'Approve, go production'
     def url = 'http://localhost:8888/'
     input message: "Does staging at $url look good? ", ok: "Deploy to production"
-  }finally{
+  }
+  finally{
     echo "Remove the resources and send the result mail to DevOps"
   }
 
