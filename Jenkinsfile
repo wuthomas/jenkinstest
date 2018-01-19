@@ -9,30 +9,33 @@ node {
   echo "Print env vars"
   sh 'printenv'
 
-  stage 'Test' {
-    parallel linux: {
-            node('linux') {
-	        echo "checkout T1 project"
-	        checkout scm
-	        sleep 5
-	        echo "Test T1 job done"
-        },
-            windows: {
-            node('windows') {
-	        echo "Checkout T2 project"
-	        checkout scm
-	        sleep 15
-	        echo "Test T2 job done"
-        },
-	    other: {
-            node('other') {
-	        echo "checkout T3 project"
-	        checkout scm
-	        sleep 10
-	        echo "Test T3 job done"
+	
+pipeline {
+    agent none
+    stages {
+        stage('Run Tests') {
+            parallel {
+                stage('Test On Windows') {
+                    agent {
+                        label "windows"
+                    }
+                    steps {
+                        echo "test done"
+                    }
+                }
+                stage('Test On Linux') {
+                    agent {
+                        label "linux"
+                    }
+                    steps {
+                        echo "test done"
+                    }
+                 }
+            }
         }
     }
-  }
+}
+
   stage 'package'
   echo "Do package jobs"
 
