@@ -4,29 +4,34 @@ node {
     print 'Hello, world $i!'
   }
 
-  stage 'checkout project'
-  git url: 'https://github.com/wuthomas/jenkinstest.git'
+  stage('Checkout'){
+
+      checkout scm
+  }
 
   stage 'check env'
 
   echo "Set env vars"
-  echo "Env vars"
+  echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL}"
 
-  stage 'parallel-testing'
-  node(master){
-      parallel 'check one': {
-	      echo "Do check job 1"
-		  sleep 5
-		  echo "Finish check job 1"
-      }, 'check two': {
-	      echo "Do check job 2"
-		  sleep 10
-		  echo "Finish check job 2"
-      }, 'check three': {
-	      echo "Do check job 3"
-		  sleep 15
-		  echo "Finish check job 3"
-      }
+  stage 'run-parallel-branches-test1'
+      steps{
+		  parallel
+		  a: {
+			  echo "Do test1 for branche master"
+			  sleep 5
+			  echo "master test1 done"
+		  },
+		  b: {
+			  echo "Do test1 for branche b"
+			  sleep 10
+			  echo "branch b test1 done"
+		  },
+		  c: {
+			  echo "Do test1 for branche c"
+			  sleep 15
+			  echo "branch c test1 done"
+		  }
   }
 
   stage 'package'
