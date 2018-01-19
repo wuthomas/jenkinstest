@@ -8,7 +8,7 @@ node {
   echo "Set env vars"
   echo "Env vars"
 
-  stage 'parallel-testing' {
+  stage 'Parallel Stage' {
     parallel {
 	stage ('check one') {
 	    echo "Do check job 1"
