@@ -1,33 +1,38 @@
 node {
 
   stage 'checkout project'
-  git url: 'https://github.com/wuthomas/jenkinstest.git'
+  checkout scm
 
   stage 'check env'
 
   echo "Set env vars"
-  echo "Env vars"
+  echo "Print env vars"
+  sh 'printenv'
 
-  stage 'Parallel Stage' {
-    parallel {
-	stage ('check one') {
-	    echo "Do check job 1"
-	    sleep 5
-	    echo "Finish check job 1"
+  stage 'Test' {
+    parallel T1: {
+            node('T1') {
+	        echo "checkout T1 project"
+	        checkout scm
+	        sleep 5
+	        echo "Test T1 job done"
+        },
+            T2: {
+            node('T2') {
+	        echo "Checkout T2 project"
+	        checkout scm
+	        sleep 15
+	        echo "Test T2 job done"
+        },
+	T3: {
+            node('T3') {
+	        echo "checkout T3 project"
+	        checkout scm
+	        sleep 10
+	        echo "Test T3 job done"
         }
-	stage ('check two') {
-	    echo "Do check job 2"
-	    sleep 10
-	    echo "Finish check job 2"
-        }
-	stage ('check three') {
-	    echo "Do check job 3"
-            sleep 15
-            echo "Finish check job 3"
-         }
-      }
+    }
   }
-
   stage 'package'
   echo "Do package jobs"
 
