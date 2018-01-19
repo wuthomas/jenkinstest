@@ -9,7 +9,25 @@ node {
   echo "Print env vars"
   sh 'printenv'
 
-	
+  stage 'package'
+  echo "Do package jobs"
+
+  stage 'preview'
+  echo 'Do preview jobs'
+
+  try{
+    stage 'Approve, go production'
+    def url = 'http://localhost:8080/'
+    input message: "Does staging at $url look good? ", ok: "Deploy to production"
+  }
+  finally{
+    echo "Remove the resources and send the result mail to DevOps"
+  }
+
+  stage 'deploy'
+  echo 'Deployment to production'
+}
+
 pipeline {
     agent none
     stages {
@@ -34,23 +52,4 @@ pipeline {
             }
         }
     }
-}
-
-  stage 'package'
-  echo "Do package jobs"
-
-  stage 'preview'
-  echo 'Do preview jobs'
-
-  try{
-    stage 'Approve, go production'
-    def url = 'http://localhost:8080/'
-    input message: "Does staging at $url look good? ", ok: "Deploy to production"
-  }
-  finally{
-    echo "Remove the resources and send the result mail to DevOps"
-  }
-
-  stage 'deploy'
-  echo 'Deployment to production'
 }
